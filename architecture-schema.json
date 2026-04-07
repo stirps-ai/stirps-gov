@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture Registry",
+  "description": "Machine-readable registry of governed components. Each entry maps a role key to its governance metadata. Governed by the structural ADR that establishes the registry.",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Reference to this schema file"
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Registry-level metadata",
+      "properties": {
+        "governed_by": {
+          "type": "string",
+          "description": "ADR that governs this registry's structure and semantics"
+        },
+        "last_updated": {
+          "type": "string",
+          "format": "date",
+          "description": "Date of last registry update"
+        }
+      },
+      "required": ["governed_by", "last_updated"]
+    },
+    "components": {
+      "type": "object",
+      "description": "Component entries keyed by role name",
+      "additionalProperties": {
+        "$ref": "#/definitions/component"
+      }
+    }
+  },
+  "required": ["metadata", "components"],
+  "definitions": {
+    "component": {
+      "type": "object",
+      "description": "A single component in the registry",
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Brief description of the component's role"
+        },
+        "governance_status": {
+          "type": "string",
+          "enum": ["governed", "pre_governance", "pending"],
+          "description": "governed = has ADR and (if applicable) spec; pre_governance = predates framework; pending = governance artefacts in progress"
+        },
+        "governing_adr": {
+          "type": ["string", "null"],
+          "description": "ADR number that governs this component (null if pre_governance)"
+        },
+        "spec": {
+          "type": ["string", "null"],
+          "description": "Path to the Gov spec for this component (null if no spec required)"
+        },
+        "category": {
+          "type": "string",
+          "description": "Component category (project-defined, e.g. 'platform', 'service', 'network')"
+        },
+        "sites": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Sites where this component is deployed (project-defined site identifiers)"
+        }
+      },
+      "required": ["description", "governance_status"],
+      "additionalProperties": false
+    }
+  }
+}
