@@ -1,0 +1,181 @@
+# Stirps: A Governance Framework for AI-Participant Infrastructure
+
+**Stirps is a recursively self-modifying, memory-preserving, adversarially-evaluated institution for governing AI-participant infrastructure that produces functioning systems.**
+
+*This document is a seed. It transmits the minimum generative intent of the Stirps framework so that a reasoning agent — human or AI — could reconstruct the architecture from principles. It is not a specification, not a tutorial, and not a prompt. If you understand the why of each structural choice, you can rediscover the what.*
+
+---
+
+## The core thesis
+
+Build an institution that uses AI as participants, not an AI workflow that sometimes consults humans.
+
+The distinction matters because workflows optimise for output. Institutions optimise for continuity of reasoning across time, across participant replacement, and across failure. A workflow breaks when its orchestrator breaks. An institution survives the replacement of any single participant — including any AI model — because reasoning continuity lives in the governance record, not in any participant's memory.
+
+**The system remembers, not the AI.** This makes every AI participant a hot-swappable reasoning engine — commodity compute, not institutional knowledge. If a better model is released tomorrow, the Gardener swaps it in. The new participant reads the governance record, grasps the state of the institution, and picks up without loss. The framework commoditises the model deliberately; participant replaceability is a design goal, not a compromise.
+
+---
+
+## Why governance precedes execution
+
+The natural instinct is to build first and govern later. This fails silently: by the time you formalise the rules, the thing you built has already established conventions, implicit contracts, and undocumented assumptions that the governance layer must either ratify or fight. Governance becomes archaeology instead of architecture.
+
+The less visible cost is that implementation without intent generates implicit governance that is invisible, untestable, and fragile. Every ad-hoc configuration choice is an unrecorded architectural decision. Every workaround is an undocumented trade-off. Every firewall rule opened under implementation pressure is a commitment made without rationale. The debt is not deferred; it is incurred invisibly and compounds with every subsequent decision that assumes the ad-hoc choice was intentional. The result is a system that works but cannot explain why it works, cannot be confidently reproduced, and resists every future change because its actual contracts are buried in implementation details rather than stated in governance records.
+
+The framework inverts this: the governance layer exists before the thing it governs. Decisions are recorded before implementations satisfy them. Contracts are written before code fulfils them. The cost is patience at the decision stage. The empirical payoff is that execution becomes fast — not despite the governance overhead, but because of it. Decisions that have passed through the evaluation gate do not need to be relitigated, debugged, or untangled during implementation. Ad-hoc troubleshooting becomes negligible because the intent was clear before the work began.
+
+This does not mean governance precedes all *understanding*. Sometimes you must experiment to learn what a specification should contain. The framework accommodates this: exploration is legitimate, and its outputs can enter the governance record retroactively through supersession or adoption ADRs. But there is a sharp distinction between **experimentation** (deliberately scoped learning, acknowledged as pre-governance) and **implementation-by-iteration** (building the production system through trial and error and hoping the result is coherent). The framework governs the latter. It makes space for the former.
+
+---
+
+## The map and the territory
+
+The framework separates into two repositories:
+
+- **Gov** (the map): what the project intends to be, and why. Contains decisions, specifications, principles, and a machine-readable registry. Stable. Slow-moving. Append-only where it matters.
+- **Imp** (the territory): what the project currently is. Contains contracts, playbooks, configuration, and inventory. Fast-moving. Satisfies contracts defined in Gov; does not define them.
+
+The reference direction is asymmetric and non-negotiable: **territory points to map; map never contains territory.** An implementation artefact may reference a governance specification. A governance specification never references a specific implementation. Violating this collapses the map into the territory — the governance layer starts describing what exists rather than what should exist, and loses its ability to reason about change.
+
+Implementation experience routinely generates new understanding that the governance layer must absorb. When building a component reveals that a previously committed architectural decision was incomplete or wrong, the framework handles this through **supersession**: a new ADR is committed that supersedes the invalidated one, with rationale that includes the implementation discovery. The original record remains intact and traversable. Implementation learning is a legitimate and expected trigger for governance evolution — but the learning flows upward through a new decision record, never by silently editing the map to match the territory.
+
+---
+
+## Decisions as immutable records
+
+Architectural Decision Records (ADRs) are the fundamental governance primitive. Each records a decision, its rationale, the options that were considered, and the conditions under which it would be considered failed. ADRs are append-only: once committed, they are not edited. A decision can be superseded by a new ADR that references it, but the original record remains intact.
+
+This is not a convention — it is load-bearing. The reasoning history must be traversable. When a future participant asks "why does this work this way?", the answer is always a committed ADR with stated rationale, not an oral tradition or a comment in code.
+
+Key structural choices within the ADR system:
+- **Template as a separate file**, not embedded in the founding ADR
+- **Failure Criteria and Definition of Done** in every ADR from the start — these make evaluation possible
+- **Lifecycle stages** (Proposed → Accepted → Superseded/Deprecated) with explicit gates between them
+
+---
+
+## The human role: the Gardener
+
+One human holds sole commit authority across both repositories. This is not a bottleneck — it is a load-bearing architectural principle.
+
+The Gardener is the only participant who can make an irreversible state transition (a commit). AI participants generate, evaluate, coordinate, and observe — but they do not commit. This means:
+- Every committed artefact has passed through human judgment
+- No AI participant can unilaterally change the governance record
+- The rate of governance change is bounded by human attention, which is a feature, not a bug
+
+The Gardener's role is not to be the smartest participant. It is to be the one whose judgment converts proposals into commitments. The editorial function is the irreducible human contribution.
+
+---
+
+## Tempo and the session model
+
+Stirps is not an autonomous multi-agent system. AI participants do not run continuously, do not queue work for the Gardener, and do not produce output unsupervised. The operating rhythm is **session-based**: the Gardener initiates a session, AI participants reason within that session under the Gardener's direction, and the session ends when the Gardener commits or defers.
+
+This means the Gardener is never buried under a backlog of machine-speed proposals. The system moves at the pace of human attention and human judgment — deliberately. The constraint is not a limitation to be engineered around; it is the mechanism that prevents governance from outrunning understanding.
+
+Within a session, the tempo is conversational, not sequential. A proposal might be generated, evaluated, revised in light of the evaluation findings, re-evaluated, and committed — all within a single session. The generator participates in resolving evaluation findings, not just in producing the initial proposal. This is a dialogue between cognitive modes, not a pipeline.
+
+---
+
+## Four cognitive modes
+
+The framework identifies four distinct cognitive modes required for self-governing systems. These are more transferable than any specific participant architecture:
+
+1. **Generate** — reason forward from committed decisions to produce new architectural proposals. Participates in revising proposals in response to evaluation findings. Concerned with: what should be true next, and how do we get there from here?
+2. **Evaluate** — adversarially test proposals against the committed record. Concerned with: is this actually consistent with what we've already decided?
+3. **Coordinate** — translate architectural intent into executable delivery. Concerned with: how do we make what should be true become true?
+4. **Observe** — synthesise patterns across the accumulated record without participating in decisions. Concerned with: what are we learning about how we govern?
+
+These modes must not collapse into each other. A participant that both generates and evaluates its own proposals has no adversarial check. A participant that both coordinates and observes loses the distance needed for honest pattern recognition. The separation is the value.
+
+In the reference implementation, four AI participants occupy these modes (one each), mapped onto Stafford Beer's Viable System Model. But a simpler project might use fewer participants. The modes are the portable minimum; the participant count is an implementation choice.
+
+---
+
+## The evaluation gate
+
+Proposals do not become commitments without adversarial evaluation. The evaluator:
+- Tests proposals against the **specific committed record**: named ADRs, stated principles, registry entries, and existing specifications — not general impressions or stylistic preferences
+- Produces findings with citations to the specific artefacts that ground each finding: blocking (must be resolved), advisory (should be considered), or no-finding
+- Does not remediate — it surfaces problems. Resolution is a conversation between the generator (who revises) and the evaluator (who re-evaluates), with the Gardener holding final judgment
+- Operates with a conservative disposition: "be conservative, surface not decide"
+
+The evaluation cycle is typically: propose → evaluate → revise → re-evaluate → commit. The generator and evaluator are in dialogue, not in sequence. The Gardener observes, directs, and makes the final commitment decision.
+
+Because the evaluator cites against concrete committed artefacts rather than interpreting intent loosely, natural language ambiguity — while real — is a bounded problem. The governance record grows more precise over time as each ADR adds to the body of citable ground truth. The evaluator's job gets more constrained, not more ambiguous, as the record matures.
+
+The evaluator's independence is structurally necessary but fragile. Known failure modes:
+- **Predictability**: if the Gardener learns the evaluator's patterns, they can craft proposals that pass without genuine scrutiny. Structural mitigations: evaluator rotation, perturbation, decomposition.
+- **Capture**: if the evaluator is always the same model instance with accumulated context, it develops implicit relationships with the governance record that compromise adversarial distance.
+- **Context saturation**: as the governance record grows, the evaluator's ability to hold all committed ground truth in a single context degrades. This is a real constraint with known solution shapes — evaluator partitioning with overlapping coverage, machine-readable registries as structural indexes, hierarchical evaluation — but it is not yet fully solved. It is worth noting that this problem is not unique to AI participants; human reviewers face the same constraint at scale, and the mitigations (specialisation, checklists, structural aids) rhyme.
+
+These are mechanism design problems, not configuration problems. They require ongoing structural attention.
+
+---
+
+## The delivery lifecycle
+
+Governance produces intent. A delivery lifecycle converts intent into running infrastructure:
+
+1. **Spec** (Gov): what this component must do, written before any implementation
+2. **Contract** (Imp): how this component will be delivered, satisfying the spec, with concrete steps and verification criteria
+3. **Branch** (Imp): isolated implementation work
+4. **Gate** (Evaluation): does the implementation satisfy the contract?
+5. **Merge** (Gardener): commitment of the delivery to the main branch
+
+Each stage has a gate. Each gate has explicit pass/fail criteria. The coordinator translates between Gov-layer specs and Imp-layer contracts — it is a pure function (repos in, drafts out) that maintains no persistent state.
+
+---
+
+## Brownfield reality
+
+Any real deployment arrives onto terrain that already has tools, networks, and services. The framework handles this through a three-state model:
+- **governed**: component has a committed ADR and satisfies a specification
+- **pre_governance**: component predates the framework; acknowledged but not yet formally adopted
+- **pending**: component is in the process of being brought under governance
+
+`pre_governance` is an honest declaration, not a permanent excuse. Each pre-governance component should have a path toward governed status, even if the timeline is distant.
+
+---
+
+## What this document does not contain
+
+- **Participant constitutions**: how each AI participant should behave. These belong in the governance repo, not here. A cold session should discover participant roles from the committed record, not from this seed.
+- **Implementation specifics**: what tools, what hardware, what services. These are territory, and territory belongs in Imp.
+- **Behavioural instructions**: "be conservative" or "don't propose changes." These are governance artefacts subject to evaluation. Putting them here would create a shadow constitution outside the governance system.
+
+If the committed governance record is not sufficient for a new participant to orient themselves, that is a signal that the record needs improvement — not that this document needs expansion.
+
+---
+
+## The bootstrap sequence
+
+If you are starting a new project using this framework:
+
+1. Commit the decision to use ADRs (ADR-000), with a separate template file
+2. Commit principles — the standing constraints that ADRs will be evaluated against
+3. Define your glossary — canonical terms before any artefact uses them
+4. Commit structural ADRs in dependency order
+5. Formalise the ADR lifecycle — this should be the first ADR to pass through its own evaluation gate
+6. Initialise the evaluator — only after there is stable ground truth to evaluate against
+7. Declare all participants upfront, including dormant ones — retroactive declaration creates supersession chains and ambiguity about when roles actually began
+
+The bootstrap is the most governance-fragile phase. Decisions made before the evaluation gate exists cannot be adversarially tested. Acknowledge this debt explicitly and plan to address it. Note that this fragility diminishes with each instantiation of the framework — a well-written seed document reduces the distance between first commit and first evaluation, which means less unexamined debt accumulates.
+
+---
+
+## The generative test
+
+If you have understood this document, you should be able to answer:
+
+- Why must the map never reference the territory?
+- Why is the Gardener's sole commit authority a feature and not a bottleneck?
+- What goes wrong when you collapse the generate and evaluate modes into one participant?
+- Why does governance that arrives after implementation become archaeology?
+- What is the difference between a workflow and an institution?
+
+If you can answer these from principle rather than by quoting this document, the seed has taken.
+
+---
+
+*Stirps: Latin, "root, lineage, stock." The governance that precedes the thing it governs.*
