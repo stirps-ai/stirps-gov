@@ -1,0 +1,19 @@
+# Handle line endings automatically for files detected as text 
+# and force them to LF (Unix-style) on check-in.
+* text=auto eol=lf
+
+# Explicitly declare common text files
+*.js      text
+*.ts      text
+*.json    text
+*.md      text
+*.txt     text
+*.css     text
+*.html    text
+
+# Ensure binary files (images, etc.) are not touched
+*.png     binary
+*.jpg     binary
+*.jpeg    binary
+*.gif     binary
+*.ico     binary
