@@ -1,0 +1,38 @@
+# Stirps
+
+> A recursively self-modifying, memory-preserving, adversarially-evaluated institution for governing AI-participant infrastructure that produces functioning systems.
+
+Stirps is a governance framework for long-lived technical projects that use AI as participants. The system remembers, not the AI. Every AI participant is stateless and replaceable; reasoning continuity lives in the governance record.
+
+## Core Principles
+
+- Governance precedes the thing it governs. Map before territory.
+- The institution is at the centre. AI participants are at the periphery.
+- One human (the Gardener) holds sole commit authority. This is load-bearing, not a bottleneck.
+- Decisions are recorded as immutable, append-only Architecture Decision Records.
+- Four cognitive modes — Generate, Evaluate, Coordinate, Observe — must be structurally separated.
+- The evaluator arrives cold to every proposal. Self-confirmation is the default failure mode of any reasoning system.
+- The session model is human-paced. AI participants do not run unsupervised.
+
+## Architecture
+
+- Two repositories: Gov (the map — decisions, specs, principles) and Imp (the territory — contracts, playbooks, configuration).
+- Reference direction is asymmetric: territory points to map; map never contains territory.
+- Delivery lifecycle: Gov spec → Evaluation gate → Contract → Evaluation gate → Branch execution → Evaluation gate → Gardener merge.
+- Three-state component model: governed, pre_governance, pending.
+
+## Primitives
+
+- Governance record: version-controlled repository (Git + Markdown)
+- Decision format: Architecture Decision Records
+- Machine-readable registry: structured data with schema validation (JSON)
+- Execution loop: stateless agent loop with external completion check
+- AI reasoning participants: isolated model sessions, one per cognitive mode
+
+## Links
+
+- Website: https://stirps.ai
+- Fork the framework: https://github.com/stirps-ai/stirps-gov
+- Bootstrap guide: https://github.com/stirps-ai/stirps-gov/blob/main/BOOTSTRAP.md
+- Reference implementation: https://github.com/stirps-ai
+- Full document: https://stirps.ai/llms-full.txt
