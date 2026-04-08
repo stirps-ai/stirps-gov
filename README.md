@@ -1,6 +1,6 @@
 # Stirps — Governance Framework
 
-A recursively self-modifying, memory-preserving, adversarially-evaluated institution for governing AI-participant infrastructure that delivers that produces functioning systems.
+A recursively self-modifying, memory-preserving, adversarially-evaluated institution for governing AI-participant infrastructure that produces functioning systems.
 
 A forkable governance framework for long-lived, self-governing technical projects.
 
